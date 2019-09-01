@@ -1,0 +1,21 @@
+
+".container" : {
+    // borderColor: "red",
+    backgroundColor: 'white'
+}
+"Label":{
+    color: 'black'
+}
+'#main': {
+    height: Ti.UI.FILL,
+    layout: 'vertical',
+    scrollType: 'vertical',
+}
+'#labelAdd': {
+    // text : 'test',
+    top: 20,
+    color: 'black',
+}
+'#tableMain': {
+    separatorColor: 'gray'	
+}

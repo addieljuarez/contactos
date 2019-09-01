@@ -1,0 +1,8 @@
+<Alloy>
+	<Window class="container" >
+		<View id='main'>
+			<Label id='labelAdd'>agregar el + 52</Label>
+			<TableView id="tableMain"></TableView>
+		</View>
+	</Window>
+</Alloy>
