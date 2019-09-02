@@ -3,79 +3,6 @@ var args = $.args;
 var add52 = true;
 
 
-// var coarseLocationPermission = "android.permission.READ_CONTACTS";
-// var hasStoragePerm = Ti.Android.hasPermission(coarseLocationPermission);
-
-// var permissionsToRequest = [];
-// Ti.API.info('===hasStoragePerm == ' + hasStoragePerm);
-
-
-// if(hasStoragePerm == false){
-//     // Ti.API.info('== entra a pedir permiso');
-//     permissionsToRequest.push(coarseLocationPermission);
-//     Ti.Android.requestPermissions(permissionsToRequest, function(e) {
-//         if (e.success) {
-
-//             // Ti.API.info('=== ok ');
-//             Ti.API.info('=== permiso 8 === ');
-//         } else {
-           
-//             // Ti.API.info('=== No ');
-//             Ti.API.info('=== permiso 9 === ');
-//         }
-//     });
-// }
-
-
-
-// if(Ti.Contacts.contactsAuthorization == Ti.Contacts.AUTHORIZATION_AUTHORIZED){
-//     //You've authorization
-//     //Some code here
-//     Ti.API.info('=== permiso 1 === ');
-// } else if (Ti.Contacts.contactsAuthorization == Ti.Contacts.AUTHORIZATION_UNKNOWN){
-//     Ti.Contacts.requestAuthorization(function(e){
-//     //Authorization is unknown so requesting for authorization
-//     if (e.success) {
-//             //You've authorization
-//             //Some code here
-//             Ti.API.info('=== permiso 2 === ');
-//         } else {
-//             //No authorization hence you cannot access contatcs
-//             Ti.API.info('=== permiso 3 === ');
-//         }
-//     });
-// } else {
-//     //No authorization hence you cannot access contatcs
-//     Ti.API.info('=== permiso 4 === ');
-// }
-
-
-// Ti.Contacts.requestContactsPermissions(function(e) {
-//     if (e.success === true) {
-//         // alert("Access granted");
-//     } else {
-//         // alert("Access denied, error: " + e.error);
-//     }
-// });
-
-
-
-// if (Ti.Contacts.hasContactsPermissions()) {
-// Ti.API.info('=== permiso 5 === ');
-// //    display();
-// } else {
-//     Ti.Contacts.requestContactsPermissions(function(e) {
-//         if (e.success === true) {
-//             Ti.API.info('=== permiso 6 === ');
-//         //   display();         
-//         } else {
-//             Ti.API.info('=== permiso 7 === ');
-//             alert("Access denied, error: " + e.error);
-//         }
-//     });
-// }
-
-
 
 
 /**
@@ -452,7 +379,7 @@ function cleanOriginal(_number){
 
 
 
-getContacts(add52);
+
 
 $.labelAdd.addEventListener('click', function(e){
     if(add52 == true){
@@ -466,19 +393,29 @@ $.labelAdd.addEventListener('click', function(e){
 });
 
 
-$.Main.addEventListener('open', function(){
+
+function permissions(){
     if (Ti.Contacts.hasContactsPermissions()) {
-    Ti.API.info('=== permiso 5 === ');
-    //    display();
+        // Ti.API.info('=== permiso 5 === ');
+        //    display();
+        getContacts(add52);
     } else {
         Ti.Contacts.requestContactsPermissions(function(e) {
             if (e.success === true) {
-                Ti.API.info('=== permiso 6 === ');
-            //   display();         
+                // Ti.API.info('=== permiso 6 === ');
+                //   display();  
+                getContacts(add52);       
             } else {
-                Ti.API.info('=== permiso 7 === ');
-                alert("Access denied, error: " + e.error);
+                // Ti.API.info('=== permiso 7 === ');
+                // alert("Access denied, error: " + e.error);
+                // permissions()
+                alert('No podemos acceder a tus contactso');
             }
         });
     }
+}
+
+
+$.Main.addEventListener('open', function(){
+    permissions();
 });

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<style name="materialTheme" parent="@style/Theme.AppCompat">
+		<item name="windowNoTitle">true</item>
+		<item name="windowActionBar">true</item>
+	</style>
+</resources>
