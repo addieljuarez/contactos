@@ -1,29 +1,79 @@
 // Arguments passed into this controller can be accessed via the `$.args` object directly or:
 var args = $.args;
-var add52 = false;
+var add52 = true;
 
 
-var coarseLocationPermission = "android.permission.READ_CONTACTS";
-var hasStoragePerm = Ti.Android.hasPermission(coarseLocationPermission);
+// var coarseLocationPermission = "android.permission.READ_CONTACTS";
+// var hasStoragePerm = Ti.Android.hasPermission(coarseLocationPermission);
 
-var permissionsToRequest = [];
-Ti.API.info('===hasStoragePerm == ' + hasStoragePerm);
+// var permissionsToRequest = [];
+// Ti.API.info('===hasStoragePerm == ' + hasStoragePerm);
 
 
-if(hasStoragePerm == false){
-    Ti.API.info('== entra a pedir permiso');
-    permissionsToRequest.push(coarseLocationPermission);
-    Ti.Android.requestPermissions(permissionsToRequest, function(e) {
-        if (e.success) {
+// if(hasStoragePerm == false){
+//     // Ti.API.info('== entra a pedir permiso');
+//     permissionsToRequest.push(coarseLocationPermission);
+//     Ti.Android.requestPermissions(permissionsToRequest, function(e) {
+//         if (e.success) {
 
-            Ti.API.info('=== ok ');
-        } else {
+//             // Ti.API.info('=== ok ');
+//             Ti.API.info('=== permiso 8 === ');
+//         } else {
            
-            Ti.API.info('=== No ');
-        }
-    });
-}
+//             // Ti.API.info('=== No ');
+//             Ti.API.info('=== permiso 9 === ');
+//         }
+//     });
+// }
 
+
+
+// if(Ti.Contacts.contactsAuthorization == Ti.Contacts.AUTHORIZATION_AUTHORIZED){
+//     //You've authorization
+//     //Some code here
+//     Ti.API.info('=== permiso 1 === ');
+// } else if (Ti.Contacts.contactsAuthorization == Ti.Contacts.AUTHORIZATION_UNKNOWN){
+//     Ti.Contacts.requestAuthorization(function(e){
+//     //Authorization is unknown so requesting for authorization
+//     if (e.success) {
+//             //You've authorization
+//             //Some code here
+//             Ti.API.info('=== permiso 2 === ');
+//         } else {
+//             //No authorization hence you cannot access contatcs
+//             Ti.API.info('=== permiso 3 === ');
+//         }
+//     });
+// } else {
+//     //No authorization hence you cannot access contatcs
+//     Ti.API.info('=== permiso 4 === ');
+// }
+
+
+// Ti.Contacts.requestContactsPermissions(function(e) {
+//     if (e.success === true) {
+//         // alert("Access granted");
+//     } else {
+//         // alert("Access denied, error: " + e.error);
+//     }
+// });
+
+
+
+// if (Ti.Contacts.hasContactsPermissions()) {
+// Ti.API.info('=== permiso 5 === ');
+// //    display();
+// } else {
+//     Ti.Contacts.requestContactsPermissions(function(e) {
+//         if (e.success === true) {
+//             Ti.API.info('=== permiso 6 === ');
+//         //   display();         
+//         } else {
+//             Ti.API.info('=== permiso 7 === ');
+//             alert("Access denied, error: " + e.error);
+//         }
+//     });
+// }
 
 
 
@@ -34,6 +84,8 @@ if(hasStoragePerm == false){
  * @param {Boolean} _add52 
  */
 function getContacts(_add52){
+
+    $.loading.show();
 
 
     var people = Ti.Contacts.getAllPeople();
@@ -74,7 +126,7 @@ function getContacts(_add52){
                         touchEnabled: valueTouchMobile
                     });
                     var titlePhone = Ti.UI.createLabel({
-                        text: cleanOriginal(people[i].phone.mobile[j]) + ' -> ' + ((deleteSpaces(people[i].phone.mobile[j]).length < 10) ? deleteSpaces(people[i].phone.mobile[j]) : (((_add52 == true) ? '+52' : '') + deleteSpaces(people[i].phone.mobile[j]))),
+                        text: cleanOriginal(people[i].phone.mobile[j]) + ' -> ' +  ((!valueTouchMobile) ? deleteSpaces(people[i].phone.mobile[j]) : (((_add52 == true) ? '+52' : '') + deleteSpaces(people[i].phone.mobile[j])) ),
                         top: 0,
                         left: 20,
                         height: Ti.UI.SIZE,
@@ -86,7 +138,19 @@ function getContacts(_add52){
                         touchEnabled: false,
                         value: valueTouchMobile,
                     });
-                    Ti.API.info('number: ' + deleteSpaces(people[i].phone.mobile[j]) + ', ' + valueTouchMobile);
+                    // Ti.API.info('number: ' + deleteSpaces(people[i].phone.mobile[j]) + ', ' + valueTouchMobile);
+
+                    viewPhone.switchView = switchView;
+                    viewPhone.addEventListener('click', function(e){
+                        if(e.source.touchEnabled == true){
+                            if(e.source.switchView.value == true){
+                                e.source.switchView.value = false;
+                            }else{
+                                e.source.switchView.value = true;
+                            }
+                        }
+                    });
+
                     viewPhone.add(titlePhone);
                     viewPhone.add(switchView);
                     row.add(viewPhone);      
@@ -102,7 +166,7 @@ function getContacts(_add52){
                         touchEnabled: valueTouchHome
                     });
                     var phoneHome = Ti.UI.createLabel({
-                        text: cleanOriginal(people[i].phone.home[j]) + ' -> ' +     (( deleteSpaces(people[i].phone.home[j]).length < 10 ) ? deleteSpaces(people[i].phone.home[j]).length < 10 : ((_add52 == true) ? '+52' : '') + deleteSpaces(people[i].phone.home[j])),
+                        text: cleanOriginal(people[i].phone.home[j]) + ' -> ' +  ( (!valueTouchHome) ? deleteSpaces(people[i].phone.home[j]) : ((_add52 == true) ? '+52' : '') + deleteSpaces(people[i].phone.home[j]) ),
                         top: 5,
                         left: 20,
                         height: Ti.UI.SIZE,
@@ -114,7 +178,17 @@ function getContacts(_add52){
                         touchEnabled: false,
                         value: valueTouchHome,
                     });
-                    Ti.API.info('number: ' + deleteSpaces(people[i].phone.home[j]) + ', ' + valueTouchHome);
+                    viewPhone.switchView = switchView;
+                    viewPhone.addEventListener('click', function(e){
+                        if(e.source.touchEnabled == true){
+                            if(e.source.switchView.value == true){
+                                e.source.switchView.value = false;
+                            }else{
+                                e.source.switchView.value = true;
+                            }
+                        }
+                    });
+                    // Ti.API.info('number: ' + deleteSpaces(people[i].phone.home[j]) + ', ' + valueTouchHome);
                     viewPhone.add(phoneHome);
                     viewPhone.add(switchView);
                     row.add(viewPhone);   
@@ -131,7 +205,7 @@ function getContacts(_add52){
                     });
                     var phoneOther = Ti.UI.createLabel({
                         // text: 'other: ' + cleanOriginal(people[i].phone.other[j])  + ' -> ' + deleteSpaces(people[i].phone.other[j]),
-                        text: cleanOriginal(people[i].phone.other[j])  + ' -> ' + ((_add52 == true) ? '+52' : '') + deleteSpaces(people[i].phone.other[j]),
+                        text: cleanOriginal(people[i].phone.other[j])  + ' -> ' + ((!valueTouchOther) ? deleteSpaces(people[i].phone.other[j]) : ((_add52 == true) ? '+52' : '') + deleteSpaces(people[i].phone.other[j])),
                         top: 5,
                         left: 20,
                         height: Ti.UI.SIZE,
@@ -143,7 +217,17 @@ function getContacts(_add52){
                         touchEnabled: false,
                         value: valueTouchOther,
                     });
-                    Ti.API.info('number: ' + deleteSpaces(people[i].phone.other[j]) + ', ' + valueTouchOther);
+                    viewPhone.switchView = switchView;
+                    viewPhone.addEventListener('click', function(e){
+                        if(e.source.touchEnabled == true){
+                            if(e.source.switchView.value == true){
+                                e.source.switchView.value = false;
+                            }else{
+                                e.source.switchView.value = true;
+                            }
+                        }
+                    });
+                    // Ti.API.info('number: ' + deleteSpaces(people[i].phone.other[j]) + ', ' + valueTouchOther);
                     viewPhone.add(phoneOther);
                     viewPhone.add(switchView);
                     row.add(viewPhone);    
@@ -160,7 +244,7 @@ function getContacts(_add52){
                     });
                     var phonePager = Ti.UI.createLabel({
                         // text: 'pager: ' + cleanOriginal(people[i].phone.pager[j]) + ' -> ' + deleteSpaces(people[i].phone.pager[j]),
-                        text: cleanOriginal(people[i].phone.pager[j]) + ' -> ' + ((_add52 == true) ? '+52' : '') + deleteSpaces(people[i].phone.pager[j]),
+                        text: cleanOriginal(people[i].phone.pager[j]) + ' -> ' + ((!valueTouchPager) ? deleteSpaces(people[i].phone.pager[j]) : ((_add52 == true) ? '+52' : '') + deleteSpaces(people[i].phone.pager[j])),
                         top: 5,
                         left: 20,
                         height: Ti.UI.SIZE,
@@ -172,7 +256,17 @@ function getContacts(_add52){
                         touchEnabled: false,
                         value: valueTouchPager,
                     });
-                    Ti.API.info('number: ' + deleteSpaces(people[i].phone.pager[j]) + ', ' + valueTouchPager);
+                    viewPhone.switchView = switchView;
+                    viewPhone.addEventListener('click', function(e){
+                        if(e.source.touchEnabled == true){
+                            if(e.source.switchView.value == true){
+                                e.source.switchView.value = false;
+                            }else{
+                                e.source.switchView.value = true;
+                            }
+                        }
+                    });
+                    // Ti.API.info('number: ' + deleteSpaces(people[i].phone.pager[j]) + ', ' + valueTouchPager);
                     viewPhone.add(phonePager);
                     viewPhone.add(switchView);
                     row.add(viewPhone);
@@ -189,7 +283,7 @@ function getContacts(_add52){
                     });
                     var phoneWork = Ti.UI.createLabel({
                         // text: 'work: ' + cleanOriginal(people[i].phone.work[j]) + ' -> ' + deleteSpaces(people[i].phone.work[j]),
-                        text: cleanOriginal(people[i].phone.work[j]) + ' -> ' + ((_add52 == true) ? '+52' : '') + deleteSpaces(people[i].phone.work[j]),
+                        text: cleanOriginal(people[i].phone.work[j]) + ' -> ' + ((!valueTouchWork) ? deleteSpaces(people[i].phone.work[j]) : ((_add52 == true) ? '+52' : '') + deleteSpaces(people[i].phone.work[j])),
                         top: 5,
                         left: 20,
                         height: Ti.UI.SIZE,
@@ -201,7 +295,17 @@ function getContacts(_add52){
                         touchEnabled: false,
                         value: valueTouchWork,
                     });
-                    Ti.API.info('number: ' + deleteSpaces(people[i].phone.work[j]) + ', ' + valueTouchWork);
+                    viewPhone.switchView = switchView;
+                    viewPhone.addEventListener('click', function(e){
+                        if(e.source.touchEnabled == true){
+                            if(e.source.switchView.value == true){
+                                e.source.switchView.value = false;
+                            }else{
+                                e.source.switchView.value = true;
+                            }
+                        }
+                    });
+                    // Ti.API.info('number: ' + deleteSpaces(people[i].phone.work[j]) + ', ' + valueTouchWork);
                     viewPhone.add(phoneWork);
                     viewPhone.add(switchView);
                     row.add(viewPhone);
@@ -218,7 +322,7 @@ function getContacts(_add52){
                     });
                     var phoneWorkFax = Ti.UI.createLabel({
                         // text: 'workFax: ' + cleanOriginal(people[i].phone.workFax[j]) + ' -> ' + deleteSpaces(people[i].phone.workFax[j]),
-                        text: cleanOriginal(people[i].phone.workFax[j]) + ' -> ' + ((_add52 == true) ? '+52' : '') + deleteSpaces(people[i].phone.workFax[j]),
+                        text: cleanOriginal(people[i].phone.workFax[j]) + ' -> ' + ((!valueTouchWorkFax) ? deleteSpaces(people[i].phone.workFax[j]) : ((_add52 == true) ? '+52' : '') + deleteSpaces(people[i].phone.workFax[j])),
                         top: 5,
                         left: 20,
                         height: Ti.UI.SIZE,
@@ -230,7 +334,17 @@ function getContacts(_add52){
                         touchEnabled: false,
                         value: valueTouchWorkFax,
                     });
-                    Ti.API.info('number: ' + deleteSpaces(people[i].phone.workFax[j]) + ', ' + valueTouchWorkFax);
+                    viewPhone.switchView = switchView;
+                    viewPhone.addEventListener('click', function(e){
+                        if(e.source.touchEnabled == true){
+                            if(e.source.switchView.value == true){
+                                e.source.switchView.value = false;
+                            }else{
+                                e.source.switchView.value = true;
+                            }
+                        }
+                    });
+                    // Ti.API.info('number: ' + deleteSpaces(people[i].phone.workFax[j]) + ', ' + valueTouchWorkFax);
                     viewPhone.add(phoneWorkFax);
                     viewPhone.add(switchView);
                     row.add(viewPhone);
@@ -247,7 +361,7 @@ function getContacts(_add52){
                     });
                     var phoneHomeFax = Ti.UI.createLabel({
                         // text: 'homeFax: ' + cleanOriginal(people[i].phone.homeFax[j]) + ' -> ' + deleteSpaces(people[i].phone.homeFax[j]),
-                        text: cleanOriginal(people[i].phone.homeFax[j]) + ' -> ' + ((_add52 == true) ? '+52' : '') + deleteSpaces(people[i].phone.homeFax[j]),
+                        text: cleanOriginal(people[i].phone.homeFax[j]) + ' -> ' + ((!valueTouchHomeFax) ? deleteSpaces(people[i].phone.homeFax[j]) : ((_add52 == true) ? '+52' : '') + deleteSpaces(people[i].phone.homeFax[j])),
                         top: 5,
                         left: 20,
                         height: Ti.UI.SIZE,
@@ -259,7 +373,17 @@ function getContacts(_add52){
                         touchEnabled: false,
                         value: valueTouchHomeFax,
                     });
-                    Ti.API.info('number: ' + deleteSpaces(people[i].phone.homeFax[j]) + ', ' + valueTouchHomeFax);
+                    viewPhone.switchView = switchView;
+                    viewPhone.addEventListener('click', function(e){
+                        if(e.source.touchEnabled == true){
+                            if(e.source.switchView.value == true){
+                                e.source.switchView.value = false;
+                            }else{
+                                e.source.switchView.value = true;
+                            }
+                        }
+                    });
+                    // Ti.API.info('number: ' + deleteSpaces(people[i].phone.homeFax[j]) + ', ' + valueTouchHomeFax);
                     viewPhone.add(phoneHomeFax);
                     viewPhone.add(switchView);
                     row.add(viewPhone);
@@ -289,6 +413,7 @@ function getContacts(_add52){
 
     $.tableMain.data = arrayContactos;
     // Ti.API.info('== people == ' + JSON.stringify(people));
+    $.loading.hide();
 }
 
 
@@ -332,8 +457,28 @@ getContacts(add52);
 $.labelAdd.addEventListener('click', function(e){
     if(add52 == true){
         add52 = false;
+         $.labelAdd.text = 'Agregar el +52';
     }else{
         add52 = true;
+        $.labelAdd.text = 'Quitar el +52';
     }
     getContacts(add52);
+});
+
+
+$.Main.addEventListener('open', function(){
+    if (Ti.Contacts.hasContactsPermissions()) {
+    Ti.API.info('=== permiso 5 === ');
+    //    display();
+    } else {
+        Ti.Contacts.requestContactsPermissions(function(e) {
+            if (e.success === true) {
+                Ti.API.info('=== permiso 6 === ');
+            //   display();         
+            } else {
+                Ti.API.info('=== permiso 7 === ');
+                alert("Access denied, error: " + e.error);
+            }
+        });
+    }
 });

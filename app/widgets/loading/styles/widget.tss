@@ -1,0 +1,14 @@
+"#loadingActivityContainer" : {
+	top:0,
+	left:0,
+	height:Ti.UI.FILL,
+	width:Ti.UI.FILL,
+  	backgroundColor:"#99000000",
+  	visible:false,
+  	layout:"absolute",
+  	zIndex:999
+}
+
+"#loadingActivity" : {
+  style: Titanium.UI.ActivityIndicatorStyle.BIG 
+}

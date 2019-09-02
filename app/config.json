@@ -6,5 +6,7 @@
 	"os:android": {},
 	"os:ios": {},
 	"os:windows": {},
-	"dependencies": {}
+	"dependencies": {
+		"loading": "1.0"
+	}
 }

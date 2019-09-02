@@ -1,7 +1,8 @@
 <Alloy>
 	<Window class="container" >
+		<Widget id="loading" src="loading"/>
 		<View id='main'>
-			<Label id='labelAdd'>agregar el + 52</Label>
+			<Label id='labelAdd'>Quitar el +52</Label>
 			<TableView id="tableMain"></TableView>
 		</View>
 	</Window>

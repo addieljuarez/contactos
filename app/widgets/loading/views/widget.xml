@@ -1,0 +1,5 @@
+<Alloy>	
+	<View id="loadingActivityContainer">
+		<ActivityIndicator id="loadingActivity"/>
+	</View>
+</Alloy>
